@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia SPA: DNS a Windows Server</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #CAF0F8;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            transition: all 0.3s ease-in-out;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .flow-step-horiz {
+            position: relative;
+        }
+        .flow-step-horiz:not(:last-child)::after {
+            content: '►';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #0096C7;
+            z-index: 0;
+        }
+        .flow-step-vert {
+            position: relative;
+        }
+        .flow-step-vert:not(:last-child)::after {
+            content: '▼';
+            position: absolute;
+            bottom: -1.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: #0096C7;
+        }
+        @media (max-width: 768px) {
+            .flow-step-horiz:not(:last-child)::after {
+                content: '▼';
+                right: 50%;
+                top: auto;
+                bottom: -1.75rem;
+                transform: translateX(50%);
+            }
+        }
+        .table-auto th {
+            border-bottom: 2px solid #90E0EF;
+        }
+        .table-auto td {
+            border-bottom: 1px solid #ADE8F4;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-5xl font-bold text-[#0077B6]">Infografia SPA: DNS a Windows Server</h1>
+            <p class="text-lg md:text-xl text-[#0096C7] mt-2">Mòdul 0227 (SMX) | Guia de Pràctica Interactiva</p>
+        </header>
+
+        <section id="entorn" class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6 text-[#0077B6]">1. L'Entorn de Pràctica</h2>
+            <p class="text-center max-w-2xl mx-auto mb-8 text-gray-700">
+                Aquesta pràctica involucra tres components clau: el Servidor Windows que actuarà com a DNS, el Client Linux que farà les consultes, i la Xarxa que els connecta.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card text-center">
+                    <span class="text-6xl" role="img" aria-label="Server">🖥️</span>
+                    <h3 class="text-2xl font-semibold text-[#0077B6] mt-4 mb-2">Servidor</h3>
+                    <p class="text-lg font-medium">Windows Server</p>
+                    <p class="text-gray-600">IP Estàtica: <strong class="text-gray-800">192.168.1.100</strong></p>
+                    <p class="text-gray-600">DNS Preferit: <strong class="text-gray-800">127.0.0.1</strong></p>
+                </div>
+                <div class="card text-center">
+                    <span class="text-6xl" role="img" aria-label="Client">💻</span>
+                    <h3 class="text-2xl font-semibold text-[#0077B6] mt-4 mb-2">Client</h3>
+                    <p class="text-lg font-medium">Linux Debian (GNOME)</p>
+                    <p class="text-gray-600">Configuració: <strong class="text-gray-800">IP Manual</strong></p>
+                    <p class="text-gray-600">Servidor DNS: <strong class="text-gray-800">192.168.1.100</strong></p>
+                </div>
+                <div class="card text-center">
+                    <span class="text-6xl" role="img" aria-label="Network">🌐</span>
+                    <h3 class="text-2xl font-semibold text-[#0077B6] mt-4 mb-2">Domini</h3>
+                    <p class="text-lg font-medium">smx.local</p>
+                    <p class="text-gray-600">ID de Xarxa: <strong class="text-gray-800">192.168.1.0/24</strong></p>
+                    <p class="text-gray-600">Objectiu: <strong class="text-gray-800">Resolució interna</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="procés-servidor" class="mb-12 card">
+            <h2 class="text-3xl font-bold text-center mb-8 text-[#0077B6]">2. Procés de Configuració del Servidor</h2>
+            <p class="text-center max-w-2xl mx-auto mb-10 text-gray-700">
+                Seguiu aquests passos al Windows Server per instal·lar i configurar el servei DNS des de zero.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-16 py-8">
+                <div class="flow-step-horiz text-center">
+                    <div class="bg-[#90E0EF] rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold text-[#0077B6] mx-auto mb-4 relative z-10 border-4 border-white">1</div>
+                    <h3 class="text-xl font-semibold mb-2">Instal·la el Rol</h3>
+                    <p class="text-gray-600">Afegeix el rol <strong class="text-gray-800">"DNS Server"</strong> des de l'Administrador del Servidor.</p>
+                </div>
+                <div class="flow-step-horiz text-center">
+                    <div class="bg-[#90E0EF] rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold text-[#0077B6] mx-auto mb-4 relative z-10 border-4 border-white">2</div>
+                    <h3 class="text-xl font-semibold mb-2">Configura la Xarxa</h3>
+                    <p class="text-gray-600">Assigna una IP Estàtica i posa el DNS preferit a <strong class="text-gray-800">127.0.0.1</strong>.</p>
+                </div>
+                <div class="flow-step-horiz text-center">
+                    <div class="bg-[#90E0EF] rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold text-[#0077B6] mx-auto mb-4 relative z-10 border-4 border-white">3</div>
+                    <h3 class="text-xl font-semibold mb-2">Crea Zona Directa</h3>
+                    <p class="text-gray-600">Crea una Zona Primària amb el nom <strong class="text-gray-800">smx.local</strong> per resoldre noms a IPs.</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-[#90E0EF] rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold text-[#0077B6] mx-auto mb-4 relative z-10 border-4 border-white">4</div>
+                    <h3 class="text-xl font-semibold mb-2">Crea Zona Inversa</h3>
+                    <p class="text-gray-600">Crea una Zona Primària Inversa per a l'ID de xarxa <strong class="text-gray-800">192.168.1</strong> per resoldre IPs a noms.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="registres-verificació" class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8 text-[#0077B6]">3. Registres Clau i Verificació</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-center mb-6">Registres DNS Creats</h3>
+                    <p class="text-center text-gray-700 mb-6">
+                        Durant la pràctica, creem principalment dos tipus de registres: <strong>A</strong> (Adreça) i <strong>PTR</strong> (Punter). Aquest gràfic mostra la composició dels registres que hem afegit.
+                    </p>
+                    <div class="relative w-full max-w-xs mx-auto h-64 md:h-72">
+                        <canvas id="recordTypesChart"></canvas>
+                    </div>
+                    
+                    <h4 class="text-xl font-semibold text-center mt-8 mb-4">Taula de Registres</h4>
+                    <div class="overflow-x-auto">
+                        <table class="table-auto w-full text-left">
+                            <thead>
+                                <tr>
+                                    <th class="p-2">Nom</th>
+                                    <th class="p-2">Tipus</th>
+                                    <th class="p-2">Destí</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="p-2 font-mono text-sm">www.smx.local</td>
+                                    <td class="p-2"><span class="bg-[#90E0EF] text-[#0077B6] font-bold px-2 py-0.5 rounded">A</span></td>
+                                    <td class="p-2 font-mono text-sm">192.168.1.100</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-mono text-sm">ftp.smx.local</td>
+                                    <td class="p-2"><span class="bg-[#90E0EF] text-[#0077B6] font-bold px-2 py-0.5 rounded">A</span></td>
+                                    <td class="p-2 font-mono text-sm">192.168.1.101</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-mono text-sm">100.1.168.192.in-addr.arpa</td>
+                                    <td class="p-2"><span class="bg-[#ADE8F4] text-[#0077B6] font-bold px-2 py-0.5 rounded">PTR</span></td>
+                                    <td class="p-2 font-mono text-sm">www.smx.local.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-center mb-6">Verificació al Client (Debian)</h3>
+                    <p class="text-center text-gray-700 mb-8">
+                        Un cop el servidor està llest, anem al client Linux per comprovar que tot funciona correctament.
+                    </p>
+                    <div class="space-y-12 pl-4">
+                        <div class="flow-step-vert">
+                            <span class="absolute -left-4 bg-[#0096C7] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</span>
+                            <h4 class="text-xl font-semibold mb-2">Configura el Client</h4>
+                            <p class="text-gray-600">A la configuració de xarxa del Debian, estableix el servidor DNS manualment a <strong class="text-gray-800">192.168.1.100</strong>.</p>
+                        </div>
+                        <div class="flow-step-vert">
+                            <span class="absolute -left-4 bg-[#0096C7] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</span>
+                            <h4 class="text-xl font-semibold mb-2">Prova la Resolució Directa (A)</h4>
+                            <p class="text-gray-600">Obre un terminal i executa:</p>
+                            <pre class="bg-gray-900 text-white rounded p-3 mt-2 text-sm overflow-x-auto">dig www.smx.local</pre>
+                            <p class="text-gray-600 mt-2"><strong>Resultat esperat:</strong> Veure <strong class="text-gray-800">192.168.1.100</strong> a la secció "ANSWER".</p>
+                        </div>
+                        <div>
+                            <span class="absolute -left-4 bg-[#0096C7] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</span>
+                            <h4 class="text-xl font-semibold mb-2">Prova la Resolució Inversa (PTR)</h4>
+                            <p class="text-gray-600">Al mateix terminal, executa:</p>
+                            <pre class="bg-gray-900 text-white rounded p-3 mt-2 text-sm overflow-x-auto">dig -x 192.168.1.100</pre>
+                            <p class="text-gray-600 mt-2"><strong>Resultat esperat:</strong> Veure <strong class="text-gray-800">www.smx.local.</strong> a la secció "ANSWER".</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-6 border-t border-[#0096C7]">
+            <p class="text-gray-600">Signat: Raül Saiz Laudó</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('recordTypesChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Registres A', 'Registres PTR'],
+                    datasets: [{
+                        label: 'Tipus de Registre Creats',
+                        data: [2, 1],
+                        backgroundColor: [
+                            '#0096C7', 
+                            '#48CAE4'  
+                        ],
+                        borderColor: [
+                            '#FFFFFF',
+                            '#FFFFFF'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
