@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: Servidor de Correu Postfix i Dovecot</title>
+    <!-- Càrrega del framework Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        /* Definició de variables de color (Estil Server/Tech) */
+        :root {
+            --color-blue: #2980B9;
+            --color-green: #27AE60;
+            --color-yellow: #F39C12;
+            --color-red: #C0392B;
+            --color-dark: #2C3E50;
+        }
+
+        .section-header {
+            color: var(--color-dark);
+            border-bottom: 3px solid var(--color-blue);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); 
+            padding: 1.5rem;
+            border-top-width: 8px;
+            min-height: 180px;
+        }
+        
+        .protocol-box {
+            background-color: #ecf0f1;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .flow-arrow {
+            font-size: 3rem;
+            color: var(--color-dark);
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-12 bg-white p-6 rounded-xl shadow-lg" style="border-top: 5px solid var(--color-blue);">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--color-dark);">Servidor de Correu a Debian 12</h1>
+            <p class="text-xl text-gray-600 font-medium">Arquitectura MTA (Postfix) i MDA (Dovecot)</p>
+        </header>
+
+        <!-- SECCIÓ 1: ARQUITECTURA DE FLUX DE CORREU -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">1. Flux de Correu Electrònic</h2>
+            
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center space-y-6 lg:space-y-0 lg:space-x-4">
+                
+                <!-- MUA (Client) -->
+                <div class="module-card flex-1" style="border-top-color: var(--color-green);">
+                    <div class="text-4xl mb-2" style="color: var(--color-green);">📧</div>
+                    <h3 class="text-xl font-bold mb-2">MUA (Client)</h3>
+                    <p class="text-sm text-gray-600">Envia i rep correus (Thunderbird, Outlook, Webmail).</p>
+                </div>
+
+                <!-- Fletxa 1: Enviament (SMTP) -->
+                <div class="flow-arrow lg:rotate-0 rotate-90">→</div>
+
+                <!-- MTA (Postfix) -->
+                <div class="module-card flex-1" style="border-top-color: var(--color-blue);">
+                    <div class="text-4xl mb-2" style="color: var(--color-blue);">⚙️</div>
+                    <h3 class="text-xl font-bold mb-2">MTA: Postfix (Transport)</h3>
+                    <p class="text-sm text-gray-600">Enrutament de correu sortint i gestió de la cua.</p>
+                    <code class="code-snippet mt-2 inline-block bg-gray-100 text-sm">/etc/postfix/main.cf</code>
+                </div>
+
+                <!-- Fletxa 2: Lliurament (POP/IMAP) -->
+                <div class="flow-arrow lg:rotate-0 rotate-90">→</div>
+                
+                <!-- MDA (Dovecot) -->
+                <div class="module-card flex-1" style="border-top-color: var(--color-yellow);">
+                    <div class="text-4xl mb-2" style="color: var(--color-yellow);">📥</div>
+                    <h3 class="text-xl font-bold mb-2">MDA: Dovecot (Accés)</h3>
+                    <p class="text-sm text-gray-600">Lliurament local a bústies i accés POP3/IMAP.</p>
+                    <code class="code-snippet mt-2 inline-block bg-gray-100 text-sm">/etc/dovecot/dovecot.conf</code>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECCIÓ 2: PROTOCOLS I PORTS -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">2. Protocols i Ports Essencials</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                
+                <!-- SMTP -->
+                <div class="module-card bg-white p-4" style="border-top-color: var(--color-dark);">
+                    <h4 class="text-2xl font-bold mb-2" style="color: var(--color-dark);">SMTP (Enviament)</h4>
+                    <div class="protocol-box" style="background-color: #EBF5FB; color: var(--color-blue);">
+                        Port 25 <span class="text-xs ml-2">(Estàndard)</span>
+                    </div>
+                    <div class="protocol-box" style="background-color: #FEEBEB; color: var(--color-red);">
+                        Port 465 <span class="text-xs ml-2">(SMTPS/Legacy)</span>
+                    </div>
+                    <div class="protocol-box" style="background-color: #E6F3F0; color: var(--color-green);">
+                        Port 587 <span class="text-xs ml-2">(Submission/TLS)</span>
+                    </div>
+                </div>
+
+                <!-- IMAP -->
+                <div class="module-card bg-white p-4" style="border-top-color: var(--color-dark);">
+                    <h4 class="text-2xl font-bold mb-2" style="color: var(--color-dark);">IMAP (Accés/Bústia)</h4>
+                    <p class="text-sm text-gray-600 mb-2">(Mantenir correus al servidor)</p>
+                    <div class="protocol-box" style="background-color: #EBF5FB; color: var(--color-blue);">
+                        Port 143 <span class="text-xs ml-2">(Estàndard)</span>
+                    </div>
+                    <div class="protocol-box" style="background-color: #E6F3F0; color: var(--color-green);">
+                        Port 993 <span class="text-xs ml-2">(IMAPS Segur)</span>
+                    </div>
+                </div>
+                
+                <!-- POP3 -->
+                <div class="module-card bg-white p-4" style="border-top-color: var(--color-dark);">
+                    <h4 class="text-2xl font-bold mb-2" style="color: var(--color-dark);">POP3 (Accés/Descàrrega)</h4>
+                    <p class="text-sm text-gray-600 mb-2">(Descarregar i esborrar del servidor)</p>
+                    <div class="protocol-box" style="background-color: #EBF5FB; color: var(--color-blue);">
+                        Port 110 <span class="text-xs ml-2">(Estàndard)</span>
+                    </div>
+                    <div class="protocol-box" style="background-color: #E6F3F0; color: var(--color-green);">
+                        Port 995 <span class="text-xs ml-2">(POP3S Segur)</span>
+                    </div>
+                </div>
+
+                <!-- Seguretat -->
+                <div class="module-card bg-white p-4" style="border-top-color: var(--color-green);">
+                    <h4 class="text-2xl font-bold mb-2" style="color: var(--color-green);">Seguretat Clau (TLS/SSL)</h4>
+                    <ul class="list-disc list-inside text-left text-sm space-y-2">
+                        <li>Certificat TLS/SSL per xifrar dades.</li>
+                        <li>Implementació de SASL per autenticació.</li>
+                        <li>Configurar `smtpd_tls_security_level=may` (Postfix).</li>
+                        <li>Habilitar `ssl=yes` (Dovecot).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓ 3: CONFIGURACIÓ DE POSTFIX (MTA) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">3. Postfix (MTA): Directives Clau</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="module-card" style="border-top-color: var(--color-blue);">
+                    <h3 class="text-xl font-semibold mb-3">Identificació i Xarxa</h3>
+                    <ul class="list-disc list-inside text-sm space-y-2">
+                        <li>
+                            <strong class="font-medium">myhostname:</strong> Nom FQDN del servidor.
+                        </li>
+                        <li>
+                            <strong class="font-medium">mydomain:</strong> El nom del vostre domini.
+                        </li>
+                        <li>
+                            <strong class="font-medium">mynetworks:</strong> Xarxes de confiança (p. ex., la xarxa local).
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="module-card" style="border-top-color: var(--color-blue);">
+                    <h3 class="text-xl font-semibold mb-3">Lliurament Local i Autenticació</h3>
+                    <ul class="list-disc list-inside text-sm space-y-2">
+                        <li>
+                            <strong class="font-medium">home_mailbox:</strong> Ruta de la bústia (p. ex., `Maildir/`).
+                        </li>
+                        <li>
+                            <strong class="font-medium">virtual_mailbox_domains:</strong> Per a usuaris que no són del sistema (si s'utilitzen).
+                        </li>
+                        <li>
+                            <strong class="font-medium">mailbox_size_limit:</strong> Establir un límit de mida per a les bústies.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECCIÓ 4: CONFIGURACIÓ DE DOVECOT (MDA) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">4. Dovecot (MDA): Accés i Xifratge</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="module-card" style="border-top-color: var(--color-yellow);">
+                    <h3 class="text-xl font-semibold mb-3">Configuració de Protocols</h3>
+                    <ul class="list-disc list-inside text-sm space-y-2">
+                        <li>
+                            <strong class="font-medium">protocols:</strong> `imap imaps pop3 pop3s` (Habilitació).
+                        </li>
+                        <li>
+                            <strong class="font-medium">listen:</strong> Escoltar IPV4 o IPV6.
+                        </li>
+                        <li>
+                            <strong class="font-medium">mail_location:</strong> Definir el format de bústia (p. ex., `maildir:~/Maildir`).
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="module-card" style="border-top-color: var(--color-yellow);">
+                    <h3 class="text-xl font-semibold mb-3">Seguretat i Autenticació</h3>
+                    <ul class="list-disc list-inside text-sm space-y-2">
+                        <li>
+                            <strong class="font-medium">ssl:</strong> `required` o `yes`.
+                        </li>
+                        <li>
+                            <strong class="font-medium">ssl_cert/ssl_key:</strong> Rutes als fitxers de certificat.
+                        </li>
+                        <li>
+                            <strong class="font-medium">disable_plaintext_auth:</strong> Desactivar autenticació sense xifrar (recomanat a `yes`).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center text-gray-500 mt-12 pt-4 border-t border-gray-300">
+            <p class="text-lg">Infografia Tècnica - Servidors de Correu</p>
+            <p class="mt-2 text-sm font-semibold" style="color: var(--color-dark);">Raül Sáiz Laudó</p>
+        </footer>
+    </div>
+</body>
+</html>
