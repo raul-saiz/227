@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: hMailServer a Windows Server</title>
+    <!-- Càrrega del framework Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        /* Definició de variables de color (Estil Windows Server/Professional) */
+        :root {
+            --color-blue-windows: #0078D4;
+            --color-dark: #2C3E50;
+            --color-light-blue: #D6EAF8;
+            --color-green-security: #2ECC71;
+            --color-orange-config: #E67E22;
+        }
+
+        .section-header {
+            color: var(--color-dark);
+            border-bottom: 3px solid var(--color-blue-windows);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); 
+            padding: 1.5rem;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .protocol-box {
+            background-color: var(--color-light-blue);
+            color: var(--color-dark);
+            padding: 0.3rem 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: inline-block;
+            font-size: 0.9rem;
+            border: 1px solid var(--color-blue-windows);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-12 bg-white p-6 rounded-xl shadow-lg" style="border-top: 5px solid var(--color-blue-windows);">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--color-dark);">hMailServer: Servidor de Correu a Windows</h1>
+            <p class="text-xl text-gray-600 font-medium">Gestió centralitzada amb la consola d'administració</p>
+        </header>
+
+        <!-- SECCIÓ 1: PROTOCOLS I PORTS -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">1. Protocols i Ports de Comunicació</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- SMTP -->
+                <div class="module-card" style="border-top: 6px solid var(--color-blue-windows);">
+                    <div class="text-4xl mb-2" style="color: var(--color-blue-windows);">📤</div>
+                    <h3 class="text-xl font-bold mb-2">SMTP (Enviament)</h3>
+                    <p class="text-sm text-gray-600 mb-2">Transferència de missatges entre servidors i clients.</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <span class="protocol-box">25 (Estàndard)</span>
+                        <span class="protocol-box" style="background-color: #E6F3F0; color: var(--color-green-security); border-color: var(--color-green-security);">587 (Submission/TLS)</span>
+                    </div>
+                </div>
+
+                <!-- IMAP -->
+                <div class="module-card" style="border-top: 6px solid var(--color-orange-config);">
+                    <div class="text-4xl mb-2" style="color: var(--color-orange-config);">📁</div>
+                    <h3 class="text-xl font-bold mb-2">IMAP (Accés a Bústia)</h3>
+                    <p class="text-sm text-gray-600 mb-2">Permet accedir a carpetes i mantenir correus al servidor.</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <span class="protocol-box">143 (Estàndard)</span>
+                        <span class="protocol-box" style="background-color: #E6F3F0; color: var(--color-green-security); border-color: var(--color-green-security);">993 (IMAPS Segur)</span>
+                    </div>
+                </div>
+
+                <!-- POP3 -->
+                <div class="module-card" style="border-top: 6px solid var(--color-green-security);">
+                    <div class="text-4xl mb-2" style="color: var(--color-green-security);">⬇️</div>
+                    <h3 class="text-xl font-bold mb-2">POP3 (Descàrrega)</h3>
+                    <p class="text-sm text-gray-600 mb-2">Descàrrega de correus del servidor al client (opcionalment els esborra).</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <span class="protocol-box">110 (Estàndard)</span>
+                        <span class="protocol-box" style="background-color: #E6F3F0; color: var(--color-green-security); border-color: var(--color-green-security);">995 (POP3S Segur)</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECCIÓ 2: GESTIÓ I ESTRUCTURA -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">2. Gestió i Estructura (Consola d'Administració)</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                
+                <!-- Dominios -->
+                <div class="module-card p-4 h-full" style="border-top: 4px solid var(--color-blue-windows);">
+                    <h4 class="text-lg font-semibold mb-1">Dominios</h4>
+                    <div class="text-3xl mb-2" style="color: var(--color-blue-windows);">🌐</div>
+                    <p class="text-xs text-gray-600">Configuració de múltiples dominis de correu allotjats.</p>
+                </div>
+
+                <!-- Comptes -->
+                <div class="module-card p-4 h-full" style="border-top: 4px solid var(--color-orange-config);">
+                    <h4 class="text-lg font-semibold mb-1">Comptes d'Usuari</h4>
+                    <div class="text-3xl mb-2" style="color: var(--color-orange-config);">👥</div>
+                    <p class="text-xs text-gray-600">Creació, edició de contrasenyes i quotes (quotes) per usuari.</p>
+                </div>
+                
+                <!-- Rutes/Rutes -->
+                <div class="module-card p-4 h-full" style="border-top: 4px solid var(--color-dark);">
+                    <h4 class="text-lg font-semibold mb-1">Regles (Rules)</h4>
+                    <div class="text-3xl mb-2" style="color: var(--color-dark);">⚙️</div>
+                    <p class="text-xs text-gray-600">Automatització de tasques: reenviament, esborrat, filtres.</p>
+                </div>
+                
+                <!-- Logging -->
+                <div class="module-card p-4 h-full" style="border-top: 4px solid var(--color-green-security);">
+                    <h4 class="text-lg font-semibold mb-1">Logging</h4>
+                    <div class="text-3xl mb-2" style="color: var(--color-green-security);">📝</div>
+                    <p class="text-xs text-gray-600">Monitorització i resolució de problemes (log de protocols).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓ 3: SEGURETAT I REQUISITS -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold section-header">3. Seguretat i Requisits Tècnics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Seguretat -->
+                <div class="module-card text-left" style="border-top: 6px solid var(--color-green-security);">
+                    <h3 class="text-xl font-bold mb-3 w-full">Configuració de Seguretat Clau</h3>
+                    <ul class="list-disc ml-4 text-sm space-y-2">
+                        <li>
+                            <strong class="font-medium">TLS/SSL:</strong> Habilitar el xifratge per a SMTP, POP3 i IMAP (ports segurs).
+                        </li>
+                        <li>
+                            <strong class="font-medium">Autenticació SMTP:</strong> Requerir autenticació per als usuaris locals (evitar retransmissió oberta).
+                        </li>
+                        <li>
+                            <strong class="font-medium">Antivirus/Antispam:</strong> Integració amb filtres com SpamAssassin o ClamAV (via extensions).
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Requisits -->
+                <div class="module-card text-left" style="border-top: 6px solid var(--color-blue-windows);">
+                    <h3 class="text-xl font-bold mb-3 w-full">Requisits del Sistema</h3>
+                    <ul class="list-disc ml-4 text-sm space-y-2">
+                        <li>
+                            <strong class="font-medium">Sistema Operatiu:</strong> Windows Server (o Windows Desktop per proves).
+                        </li>
+                        <li>
+                            <strong class="font-medium">Base de Dades:</strong> MySQL, PostgreSQL o Microsoft SQL Server (o MS SQL Compact per a instal·lacions senzilles).
+                        </li>
+                        <li>
+                            <strong class="font-medium">Rècords DNS:</strong> Configuració correcta dels rècords MX (Mail Exchanger) del domini.
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="text-center text-gray-500 mt-12 pt-4 border-t border-gray-300">
+            <p class="text-lg">Infografia Tècnica - Servidor de Correu hMailServer</p>
+            <p class="mt-2 text-sm font-semibold" style="color: var(--color-dark);">Generat per Raül Sáiz Laudó</p>
+        </footer>
+    </div>
+</body>
+</html>
