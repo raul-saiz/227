@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: Servidor de Correu Debian 12</title>
+    <!-- Càrrega del framework Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Càrrega de la llibreria Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        /* Definició de variables de color per a consistència */
+        :root {
+            --color-red: #F94144;
+            --color-orange: #F3722C;
+            --color-amber: #F8961E;
+            --color-yellow: #F9C74F;
+            --color-pistachio: #90BE6D;
+            --color-green: #43AA8B;
+            --color-blue-gray: #577590;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        
+        /* Estils de Flow Box robustos amb CSS pur per evitar conflictes amb editors externs */
+        .flow-box {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-xl */
+            border-top-width: 8px;
+            text-align: center;
+            width: 100%; /* El bloc ocupa tota l'amplada del seu contenidor */
+            max-width: 320px; /* Límita l'amplada en pantalles grans */
+        }
+    </style>
+    
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--color-red);">Servidor de Correu a Debian 12</h1>
+            <p class="text-xl text-gray-600">Una guia visual de l'arquitectura amb Postfix (MTA) i Dovecot (MDA)</p>
+        </header>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Arquitectura General</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-3xl mx-auto text-center">
+                Un servidor de correu funcional té diverses peces mòbils. El client (p. ex., Thunderbird) utilitza el DNS per trobar el servidor. Postfix (MTA) gestiona l'enviament i recepció de correus (SMTP), mentre que Dovecot (MDA) permet als usuaris accedir a les seves bústies (IMAP/POP3).
+            </p>
+            <!-- CONTENIDOR DE FLUX SIMPLIFICAT (FORÇAT A VERTICAL) -->
+            <div class="flex flex-col items-center space-y-4 bg-white rounded-lg shadow-xl p-6">
+                
+                <!-- 1. Client de Correu -->
+                <div class="flow-box" style="border-color: var(--color-green);">
+                    <span class="text-3xl block mb-2" style="color: var(--color-green);">&#x2328;</span>
+                    <h3 class="text-lg font-semibold">Client de Correu</h3>
+                    <p class="text-sm">(p. ex. Thunderbird)</p>
+                </div>
+                
+                <!-- Fletxa de Flux -->
+                <div class="text-3xl font-bold text-gray-500">↓</div>
+                
+                <!-- 2. Servidor DNS -->
+                <div class="flow-box" style="border-color: var(--color-yellow);">
+                    <span class="text-3xl block mb-2" style="color: var(--color-yellow);">&#x269B;</span>
+                    <h3 class="text-lg font-semibold">Servidor DNS</h3>
+                    <p class="text-sm">(Registres MX i A)</p>
+                </div>
+                
+                <!-- Fletxa de Flux -->
+                <div class="text-3xl font-bold text-gray-500">↓</div>
+                
+                <!-- 3. Postfix (MTA) -->
+                <div class="flow-box" style="border-color: var(--color-orange);">
+                    <span class="text-3xl block mb-2" style="color: var(--color-orange);">&#x2709;</span>
+                    <h3 class="text-lg font-semibold">Postfix (MTA)</h3>
+                    <p class="text-sm">(Port 25 - SMTP)</p>
+                </div>
+                
+                <!-- Fletxa de Flux -->
+                <div class="text-3xl font-bold text-gray-500">↓</div>
+
+                <!-- 4. Dovecot (MDA) -->
+                <div class="flow-box" style="border-color: var(--color-pistachio);">
+                    <span class="text-3xl block mb-2" style="color: var(--color-pistachio);">&#x1F512;</span>
+                    <h3 class="text-lg font-semibold">Dovecot (MDA)</h3>
+                    <p class="text-sm">(Port 143 - IMAP)</p>
+                </div>
+                
+                <!-- Fletxa de Flux -->
+                <div class="text-3xl font-bold text-gray-500">↓</div>
+                
+                <!-- 5. Bústia d'Usuari -->
+                <div class="flow-box" style="border-color: var(--color-blue-gray);">
+                    <span class="text-3xl block mb-2" style="color: var(--color-blue-gray);">&#x1F4E5;</span>
+                    <h3 class="text-lg font-semibold">Bústia d'Usuari</h3>
+                    <p class="text-sm">(/var/mail/usuari)</p>
+                </div>
+            </div>
+            <!-- FINAL CONTENIDOR DE FLUX SIMPLIFICAT -->
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 1: La Base (Xarxa i DNS)</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-3xl mx-auto text-center">
+                Abans d'instal·lar res, el servidor necessita una identitat a la xarxa. Això inclou una IP estàtica i, de manera crucial, registres DNS que diguin al món on lliurar el correu per al vostre domini.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-amber);">Configuració de Xarxa</h3>
+                    <p class="mb-4 text-gray-600">El servidor ha de tenir una IP estàtica i un nom d'amfitrió (hostname) completament qualificat (FQDN).</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong style="color: var(--color-amber);">IP Estàtica:</strong> <code class="bg-gray-200 px-2 py-1 rounded">192.168.1.100</code></li>
+                        <li><strong style="color: var(--color-amber);">Hostname:</strong> <code class="bg-gray-200 px-2 py-1 rounded">servidorcorreu.midominiaula.local</code></li>
+                        <li><strong style="color: var(--color-amber);">Fitxer /etc/hosts:</strong> Assegura la resolució local.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-amber);">El Flux Crític del DNS</h3>
+                    <p class="mb-4 text-gray-600">Quan algú envia un correu a <code class="bg-gray-200 px-2 py-1 rounded">usuari@midominiaula.local</code>, el seu servidor de correu consulta el DNS:</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <span class="text-lg font-bold w-28" style="color: var(--color-amber);">Pas 1 (MX):</span>
+                            <div class="flex-1 bg-gray-100 p-3 rounded-lg">
+                                Cerca el registre <strong class="font-mono">MX</strong> (Mail Exchanger) per a <code class="font-mono">midominiaula.local</code>.
+                            </div>
+                        </div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flex items-center">
+                            <span class="text-lg font-bold w-28" style="color: var(--color-amber);">Pas 2 (A):</span>
+                            <div class="flex-1 bg-gray-100 p-3 rounded-lg">
+                                El DNS respon: El servidor és <code class="font-mono">servidorcorreu.midominiaula.local</code> (Prioritat 10).
+                            </div>
+                        </div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flex items-center">
+                            <span class="text-lg font-bold w-28" style="color: var(--color-amber);">Pas 3 (IP):</span>
+                            <div class="flex-1 bg-gray-100 p-3 rounded-lg">
+                                Cerca el registre <strong class="font-mono">A</strong> per a <code class="font-mono">servidorcorreu...</code> i obté l'IP: <code class="font-mono">192.168.1.100</code>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 2: Components Clau (Postfix i Dovecot)</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-3xl mx-auto text-center">
+                Un cop instal·lats, cada servei té una funció específica definida pels seus fitxers de configuració. La major part del treball es fa en uns pocs fitxers clau.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Postfix Chart Container -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-orange);">Postfix (MTA - Agent de Transferència)</h3>
+                    <p class="mb-4 text-gray-600">Postfix s'ocupa de <strong style="color: var(--color-orange);">l'enviament i la recepció</strong> de correus (SMTP). La seva configuració principal defineix quins dominis accepta i de quines xarxes confia.</p>
+                    <div class="chart-container">
+                        <canvas id="postfixChart"></canvas>
+                        <!-- Missatge d'error si el canvas falla -->
+                        <p id="postfixError" class="hidden text-center text-red-500 mt-4">
+                            El gràfic de Postfix no s'ha pogut carregar.
+                        </p>
+                    </div>
+                </div>
+                <!-- Dovecot Chart Container -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-green);">Dovecot (MDA - Agent de Lliurament)</h3>
+                    <p class="mb-4 text-gray-600">Dovecot permet als usuaris <strong style="color: var(--color-green);">llegir i gestionar</strong> el seu correu (IMAP/POP3). S'ocupa de l'autenticació i de trobar la bústia de l'usuari.</p>
+                    <div class="chart-container">
+                        <canvas id="dovecotChart"></canvas>
+                        <!-- Missatge d'error si el canvas falla -->
+                        <p id="dovecotError" class="hidden text-center text-red-500 mt-4">
+                            El gràfic de Dovecot no s'ha pogut carregar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 3: El Flux de Correu en Acció</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-3xl mx-auto text-center">
+                Hi ha dos processos separats que ocorren quan un usuari gestiona el seu correu: l'enviament (SMTP) i la recepció (IMAP).
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-orange);">Flux d'Enviament (SMTP - Port 25)</h3>
+                    <p class="mb-4 text-gray-600">Quan l' <code class="bg-gray-200 px-2 py-1 rounded">usuari1</code> envia un correu:</p>
+                    <div class="space-y-3">
+                        <div class="flow-box text-left" style="border-color: var(--color-orange); max-width: none;">Client (Thunderbird) contacta Postfix al Port 25.</div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flow-box text-left" style="border-color: var(--color-orange); max-width: none;">Postfix (SMTP) demana autenticació.</div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flow-box text-left" style="border-color: var(--color-orange); max-width: none;">El client envia usuari/contrasenya.</div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flow-box text-left" style="border-color: var(--color-orange); max-width: none;">Postfix accepta el correu i el lliura a la bústia local de <code class="bg-gray-200 px-2 py-1 rounded">usuari2</code> (o l'envia a un servidor extern).</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-green);">Flux de Lectura (IMAP - Port 143)</h3>
+                    <p class="mb-4 text-gray-600">Quan l' <code class="bg-gray-200 px-2 py-1 rounded">usuari2</code> consulta el seu correu:</p>
+                    <div class="space-y-3">
+                        <div class="flow-box text-left" style="border-color: var(--color-green); max-width: none;">Client (Thunderbird) contacta Dovecot al Port 143.</div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flow-box text-left" style="border-color: var(--color-green); max-width: none;">Dovecot (IMAP) demana autenticació.</div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flow-box text-left" style="border-color: var(--color-green); max-width: none;">El client envia usuari/contrasenya.</div>
+                        <div class="flex justify-center text-2xl text-gray-400">↓</div>
+                        <div class="flow-box text-left" style="border-color: var(--color-green); max-width: none;">Dovecot accedeix a la bústia de <code class="bg-gray-200 px-2 py-1 rounded">/var/mail/usuari2</code> i mostra els missatges al client.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <footer class="text-center text-gray-500 mt-12">
+            <p>Raül Sáiz Laudó</p>
+        </footer>
+    </div>
+
+    <script>
+        window.onload = function () {
+            
+            function wrapLabels(label, maxWidth = 16) {
+                if (typeof label !== 'string' || label.length <= maxWidth) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if (currentLine.length === 0) {
+                        currentLine = word;
+                    } else if ((currentLine + ' ' + word).length > maxWidth) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine += ' ' + word;
+                    }
+                }
+                if (currentLine.length > 0) {
+                    lines.push(currentLine);
+                }
+                return lines;
+            }
+
+            const multiLineTooltipTitle = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            boxWidth: 20,
+                            padding: 20
+                        }
+                    }
+                }
+            };
+
+            const colorRed = '#F94144';
+            const colorOrange = '#F3722C';
+            const colorAmber = '#F8961E';
+            const colorPistachio = '#90BE6D';
+            const colorGreen = '#43AA8B';
+            const colorBlueGray = '#577590';
+            const colorYellow = '#F9C74F';
+
+            try {
+                var ctxPostfix = document.getElementById('postfixChart').getContext('2d');
+                new Chart(ctxPostfix, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            wrapLabels('main.cf (Configuració Principal)'), 
+                            wrapLabels('master.cf (Gestió de Serveis)')
+                        ],
+                        datasets: [{
+                            data: [75, 25],
+                            backgroundColor: [colorOrange, colorAmber],
+                            borderColor: '#ffffff',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: multiLineTooltipTitle.plugins
+                    }
+                });
+            } catch (e) {
+                document.getElementById('postfixChart').style.display = 'none';
+                document.getElementById('postfixError').classList.remove('hidden');
+                console.error("Error al carregar Postfix Chart:", e);
+            }
+
+            try {
+                var ctxDovecot = document.getElementById('dovecotChart').getContext('2d');
+                new Chart(ctxDovecot, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            wrapLabels('10-auth.conf (Autenticació)'), 
+                            wrapLabels('10-mail.conf (Ubicació Correu)'), 
+                            wrapLabels('10-master.conf (Serveis)')
+                        ],
+                        datasets: [{
+                            data: [40, 35, 25],
+                            backgroundColor: [colorGreen, colorPistachio, colorBlueGray],
+                            borderColor: '#ffffff',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: multiLineTooltipTitle.plugins
+                    }
+                });
+            } catch (e) {
+                document.getElementById('dovecotChart').style.display = 'none';
+                document.getElementById('dovecotError').classList.remove('hidden');
+                console.error("Error al carregar Dovecot Chart:", e);
+            }
+        };
+    </script>
+</body>
+</html>
