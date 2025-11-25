@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: vsftpd Servidor FTP a Linux</title>
+    <!-- Càrrega del framework Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        /* Definició de variables de color (Estil Linux/Ubuntu) */
+        :root {
+            --color-red: #E74C3C;
+            --color-orange: #E67E22;
+            --color-yellow: #F1C40F;
+            --color-green: #2ECC71;
+            --color-blue: #3498DB;
+            --color-purple: #9B59B6;
+            --color-dark: #34495E;
+        }
+
+        .config-block {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+            border-top-width: 6px;
+        }
+        .code-snippet {
+            background-color: #ecf0f1;
+            color: var(--color-dark);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--color-dark);">vsftpd - Very Secure FTP Daemon</h1>
+            <p class="text-xl text-gray-600">Fitxer de Configuració Clau: <code class="bg-gray-200 px-2 py-1 rounded">/etc/vsftpd.conf</code></p>
+        </header>
+
+        <!-- SECCIÓ 1: CONFIGURACIÓ GLOBAL DE POLÍTIQUES -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue);">Fase 1: Límits de Recursos i Temps</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Missatge i Timeout -->
+                <div class="config-block" style="border-top-color: var(--color-red);">
+                    <h3 class="text-2xl font-semibold mb-3 text-center" style="color: var(--color-red);">Control de Connexions</h3>
+                    <ul class="list-disc list-inside space-y-3 text-gray-700">
+                        <li>
+                            <strong class="text-gray-900">Banner (Benvinguda):</strong>
+                            <div class="code-snippet">ftpd_banner="Benvingut al servidor FTP de la xarxa 'elteunom'."</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Timeout Inactivitat:</strong> 60 segons.
+                            <div class="code-snippet">idle_session_timeout=60</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Connexions Màximes:</strong> 5.
+                            <div class="code-snippet">max_clients=5</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Límits d'Ample de Banda -->
+                <div class="config-block md:col-span-2" style="border-top-color: var(--color-orange);">
+                    <h3 class="text-2xl font-semibold mb-3 text-center" style="color: var(--color-orange);">Control d'Ample de Banda (Bytes/s)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <strong class="text-gray-900 block mb-1">Límit Global (10 MB/s):</strong>
+                            <code class="code-snippet">local_max_rate=10485760</code>
+                        </div>
+                        <div>
+                            <strong class="text-gray-900 block mb-1">Límit Anònim (1 MB/s):</strong>
+                            <code class="code-snippet">anon_max_rate=1048576</code>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4 italic text-center">
+                        (Càlcul: MB * 1024 * 1024 = Bytes)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓ 2: CONFIGURACIÓ D'USUARIS I PERMISOS -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-dark);">Fase 2: Gestió d'Usuaris i Engabiament (Chroot)</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Usuaris Locals -->
+                <div class="config-block" style="border-top-color: var(--color-green);">
+                    <h3 class="text-xl font-semibold mb-3 text-center" style="color: var(--color-green);">Usuaris Locals</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>
+                            <strong class="text-gray-900">Accés:</strong> Permès.
+                            <div class="code-snippet">local_enable=YES</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Permisos:</strong> Pujada i Descàrrega.
+                            <div class="code-snippet">write_enable=YES</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Engabiament per defecte:</strong> Sí.
+                            <div class="code-snippet">chroot_local_user=YES</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Usuaris Anònims -->
+                <div class="config-block" style="border-top-color: var(--color-yellow);">
+                    <h3 class="text-xl font-semibold mb-3 text-center" style="color: var(--color-yellow);">Usuaris Anònims</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>
+                            <strong class="text-gray-900">Accés:</strong> Permès (a `/var/ftp/pub`).
+                            <div class="code-snippet">anonymous_enable=YES</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Directori Arrel:</strong> `/var/ftp`.
+                            <div class="code-snippet">anon_root=/var/ftp</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Permisos:</strong> Només Descàrrega.
+                            <div class="code-snippet">anon_upload_enable=NO</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Excepció Chroot -->
+                <div class="config-block" style="border-top-color: var(--color-purple);">
+                    <h3 class="text-xl font-semibold mb-3 text-center" style="color: var(--color-purple);">Excepció d'Engabiament</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>
+                            <strong class="text-gray-900">Permís d'Exclusió:</strong> Habilitat.
+                            <div class="code-snippet">chroot_list_enable=YES</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Fitxer de Llista:</strong>
+                            <div class="code-snippet">chroot_list_file=/etc/vsftpd.chroot_list</div>
+                        </li>
+                        <li>
+                            <strong class="text-gray-900">Usuari Exclòs:</strong> ftpUserFree (No engabiat).
+                            <div class="code-snippet"># Contingut del fitxer: ftpUserFree</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓ 3: SEGURETAT (FTPS - EXTRA) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue);">Fase 3 (Extra): Seguretat amb SSL/TLS (FTPS)</h2>
+            <div class="config-block max-w-2xl mx-auto" style="border-top-color: var(--color-dark);">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <strong class="text-gray-900 block mb-1">Activació General:</strong>
+                        <code class="code-snippet">ssl_enable=YES</code>
+                    </div>
+                    <div>
+                        <strong class="text-gray-900 block mb-1">Forçar Xifratge (Login):</strong>
+                        <code class="code-snippet">force_local_logins_ssl=YES</code>
+                    </div>
+                    <div>
+                        <strong class="text-gray-900 block mb-1">Forçar Xifratge (Dades):</strong>
+                        <code class="code-snippet">force_local_data_ssl=YES</code>
+                    </div>
+                    <div>
+                        <strong class="text-gray-900 block mb-1">Certificat:</strong>
+                        <code class="code-snippet">rsa_cert_file=/etc/ssl/certs/vsftpd.crt</code>
+                    </div>
+                </div>
+                <p class="text-sm text-center text-gray-500 mt-4">
+                    El certificat es genera amb la comanda: <code class="bg-gray-200 px-1 rounded">openssl req -x509 ...</code>
+                </p>
+            </div>
+        </section>
+
+        <footer class="text-center text-gray-500 mt-12">
+            <p>Raül Sáiz Laudó</p>
+        </footer>
+    </div>
+</body>
+</html>
