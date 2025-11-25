@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: Servidor FTP amb FileZilla Server</title>
+    <!-- Càrrega del framework Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Càrrega de la llibreria Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        /* Definició de variables de color per a consistència */
+        :root {
+            --color-red: #F94144;
+            --color-orange: #F3722C;
+            --color-amber: #F8961E;
+            --color-pistachio: #90BE6D;
+            --color-green: #43AA8B;
+            --color-blue-gray: #577590;
+            --color-purple: #723D48;
+        }
+
+        /* Estils de Flow Box robustos */
+        .flow-box {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+            border-left-width: 6px;
+            width: 100%;
+            text-align: left;
+        }
+        .step-arrow {
+            font-size: 2rem;
+            color: var(--color-blue-gray);
+            margin: 0.5rem 0;
+            line-height: 1;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--color-purple);">Servidor FTP amb FileZilla Server</h1>
+            <p class="text-xl text-gray-600">Configuració Bàsica, Usuaris i FTPS Segur</p>
+        </header>
+
+        <!-- SECCIÓ 1: ARQUITECTURA I FLUX BÀSIC -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 1: Flux Bàsic i Ports</h2>
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 bg-white rounded-lg shadow-xl p-6">
+                
+                <!-- Client -->
+                <div class="flow-box text-center" style="border-left-color: var(--color-green);">
+                    <span class="text-4xl block mb-2" style="color: var(--color-green);">&#x1F4BB;</span>
+                    <h3 class="text-lg font-semibold">Client FTP (Actiu/Passiu)</h3>
+                    <p class="text-sm text-gray-500">Inicia la transferència.</p>
+                </div>
+                
+                <!-- Fletxa -->
+                <div class="step-arrow md:rotate-90">→</div>
+                
+                <!-- Servidor -->
+                <div class="flow-box text-center" style="border-left-color: var(--color-purple);">
+                    <span class="text-4xl block mb-2" style="color: var(--color-purple);">&#x1F4E6;</span>
+                    <h3 class="text-lg font-semibold">FileZilla Server (Windows)</h3>
+                    <p class="text-sm text-gray-500">Gestiona Autenticació i Fitxers.</p>
+                </div>
+                
+                <!-- Fletxa -->
+                <div class="step-arrow md:rotate-90">→</div>
+                
+                <!-- Sistema de Fitxers -->
+                <div class="flow-box text-center" style="border-left-color: var(--color-amber);">
+                    <span class="text-4xl block mb-2" style="color: var(--color-amber);">&#x1F4C1;</span>
+                    <h3 class="text-lg font-semibold">Sistema de Fitxers Local</h3>
+                    <p class="text-sm text-gray-500">Rutes compartides (Home Directory).</p>
+                </div>
+            </div>
+            <div class="mt-6 text-center">
+                <p class="text-lg font-bold" style="color: var(--color-red);">Ports Estàndards:</p>
+                <code class="bg-gray-200 px-3 py-1 rounded-lg inline-block mt-2">FTP (Comandes): 21</code>
+                <code class="bg-gray-200 px-3 py-1 rounded-lg inline-block mt-2 ml-4">FTPS (Comandes Segures): 990</code>
+                <code class="bg-gray-200 px-3 py-1 rounded-lg inline-block mt-2 ml-4">Ports Passius: 5000-5100 (Personalitzable)</code>
+            </div>
+        </section>
+
+        <!-- SECCIÓ 2: CONFIGURACIÓ GLOBAL CLAU -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 2: Configuració Global i Límits</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Límits de Connexió i Log -->
+                <div class="bg-white rounded-lg shadow-lg p-6" style="border-top: 5px solid var(--color-orange);">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-orange);">Estructura i Control</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong class="text-gray-900">Connexions Màximes:</strong> **2**</li>
+                        <li><strong class="text-gray-900">Missatge Benvinguda:</strong> Personalitzat.</li>
+                        <li><strong class="text-gray-900">Log:</strong> Habilitat, rotació diària.</li>
+                        <li><strong class="text-gray-900">Log Mida Màxima:</strong> 200 KB.</li>
+                        <li><strong class="text-gray-900">Retenció Log:</strong> 10 dies.</li>
+                    </ul>
+                </div>
+                
+                <!-- Límits de Velocitat (Taula amb Tailwind simple) -->
+                <div class="bg-white rounded-lg shadow-lg p-6 md:col-span-2" style="border-top: 5px solid var(--color-amber);">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-amber);">Control de Límits de Velocitat (KB/s)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Període</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descàrrega (Download)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pujada (Upload)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap font-semibold">Dilluns a Divendres</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-orange-600">10 KB/s</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-orange-600">5 KB/s</td>
+                                </tr>
+                                <tr class="bg-yellow-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-semibold">Cap de Setmana</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-green-600">Màx. (0 KB/s)</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-green-600">15 KB/s</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓ 3: USUARIS I PERMISOS -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 3: Usuaris, Grups i Permisos</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Usuari Anònim -->
+                <div class="flow-box" style="border-left-color: var(--color-pistachio);">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--color-pistachio);">Usuari Anonymous</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li><strong class="font-medium">Directori Home:</strong> <code class="bg-gray-200 px-1 rounded">c:\ftp\pub</code></li>
+                        <li><strong class="font-medium">Contrasenya:</strong> No requerida.</li>
+                        <li><strong class="font-medium">Permisos:</strong> Només **Lectura** (Descàrrega).</li>
+                        <li><strong class="font-medium">Grup:</strong> Cap.</li>
+                    </ul>
+                </div>
+
+                <!-- Usuari Professor -->
+                <div class="flow-box" style="border-left-color: var(--color-red);">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--color-red);">Usuari Professor</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li><strong class="font-medium">Directori Home:</strong> <code class="bg-gray-200 px-1 rounded">c:\ftp</code></li>
+                        <li><strong class="font-medium">Contrasenya:</strong> Requerida.</li>
+                        <li><strong class="font-medium">Permisos:</strong> **Lectura, Escriptura, Esborrar, Modificar** (Control Total).</li>
+                        <li><strong class="font-medium">Grup:</strong> Cap.</li>
+                    </ul>
+                </div>
+
+                <!-- Grup Alumnes -->
+                <div class="flow-box" style="border-left-color: var(--color-blue-gray);">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--color-blue-gray);">Grup Alumnes (Alumne1, Alumne2)</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li><strong class="font-medium">Directori Home:</strong> <code class="bg-gray-200 px-1 rounded">c:\ftp\alumnes</code></li>
+                        <li><strong class="font-medium">Permisos:</strong> **Lectura** i **Escriptura**.</li>
+                        <li><strong class="font-medium">Límit Pujada:</strong> 2 KB/s (Heretat del Grup).</li>
+                        <li><strong class="font-medium">Autenticació:</strong> Contrasenya individual.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECCIÓ 4: SEGURETAT (FTPS) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--color-blue-gray);">Fase 4: Mode Passiu i Connexió Segura (FTPS)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Mode Passiu -->
+                <div class="bg-white rounded-lg shadow-lg p-6" style="border-top: 5px solid var(--color-green);">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-green);">Configuració del Mode Passiu</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong class="text-gray-900">Utilitat:</strong> Resoldre problemes de NAT/Firewall.</li>
+                        <li><strong class="text-gray-900">IP Ús:</strong> Definir IP específica del Servidor/Client.</li>
+                        <li><strong class="text-gray-900">Rang de Ports:</strong> Personalitzat i obert al Firewall (Ex: 5000 a 5100).</li>
+                    </ul>
+                </div>
+                
+                <!-- SSL/TLS (FTPS) -->
+                <div class="bg-white rounded-lg shadow-lg p-6" style="border-top: 5px solid var(--color-purple);">
+                    <h3 class="text-2xl font-semibold mb-4 text-center" style="color: var(--color-purple);">Seguretat Amb SSL/TLS (FTPS)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong class="text-gray-900">Activació:</strong> Marcar "Enable FTP over SSL/TLS support".</li>
+                        <li><strong class="text-gray-900">Certificat:</strong> Generar un nou certificat auto-signat (Key i CRT).</li>
+                        <li><strong class="text-gray-900">Port Segur:</strong> Utilitzar port alternatiu per a connexions segures (Ex: 990).</li>
+                        <li><strong class="text-gray-900">Usuari Segur:</strong> Marcar "Require a secure connection" per forçar FTPS.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <footer class="text-center text-gray-500 mt-12">
+            <p>Raül Sáiz Laudó</p>
+        </footer>
+    </div>
+    <script>
+        // No es requereix codi JS de Chart.js addicional, ja que es fa servir un format de taula i llistes simples.
+    </script>
+</body>
+</html>
