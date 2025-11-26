@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: Servidor Web Apache2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Blue Gray 100 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden border-t-8 border-orange-500">
+        <!-- Header -->
+        <header class="bg-orange-600 text-white p-6 md:p-8">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-center">SERVEI WEB AMB APACHE2 (LINUX)</h1>
+            <p class="text-center text-orange-200 mt-2 text-lg">Mòdul 0227 - SMX | Allotjament i Virtual Hosts</p>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="p-6 md:p-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Columna 1: Arquitectura i Fitxers -->
+            <div class="lg:col-span-1 space-y-8">
+                <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-orange-800 mb-4 flex items-center">
+                        <span class="text-4xl mr-3">📁</span> Fitxers de Configuració Clau
+                    </h2>
+                    <ul class="space-y-3 text-gray-700">
+                        <li><span class="font-mono bg-yellow-100 p-1 rounded">/etc/apache2/ports.conf</span>: Defineix els ports d'escolta (80, 443).</li>
+                        <li><span class="font-mono bg-yellow-100 p-1 rounded">/etc/apache2/sites-available/</span>: Conté els fitxers de configuració dels Virtual Hosts.</li>
+                        <li><span class="font-mono bg-yellow-100 p-1 rounded">/var/www/html</span>: Directori arrel del lloc per defecte.</li>
+                    </ul>
+                </div>
+
+                <!-- Ports Estàndard -->
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="text-3xl mr-3 text-red-500">🔌</span> Ports Essencials
+                    </h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>**HTTP (Sense Xifrar):** <span class="font-mono bg-red-100 p-1 rounded">80</span></li>
+                        <li>**HTTPS (Xifrat TLS/SSL):** <span class="font-mono bg-red-100 p-1 rounded">443</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Columna 2: Virtual Hosts (VHost) -->
+            <div class="lg:col-span-2 bg-gray-50 p-6 rounded-xl shadow-2xl border-2 border-gray-300">
+                <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center">
+                    <span class="text-4xl mr-3">🌐</span> Virtual Host (VHost)
+                </h2>
+
+                <p class="text-lg mb-4 text-gray-700">Permet allotjar múltiples llocs web (dominis) en un sol servidor amb una única adreça IP.</p>
+
+                <div class="bg-blue-50 p-5 rounded-lg border-2 border-blue-300">
+                    <h3 class="font-semibold text-blue-800 mb-3 flex items-center"><span class="mr-2">📝</span> Estructura Mínima d'un VHost</h3>
+                    <pre class="bg-gray-800 text-green-300 p-3 rounded text-sm overflow-x-auto"><code>
+&lt;VirtualHost *:80&gt;
+    ServerName fp227.local 
+    ServerAlias www.fp227.local 
+    DocumentRoot /var/www/fp227.local/html  &lt;-- Ubicació dels fitxers
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+&lt;/VirtualHost&gt;
+                    </code></pre>
+                </div>
+            </div>
+
+            <!-- Columna 3: Comandes i Gestió -->
+            <div class="lg:col-span-3">
+                <div class="bg-green-50 border-l-4 border-green-600 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-green-800 mb-4 flex items-center">
+                        <span class="text-4xl mr-3">🚀</span> Comandes de Gestió
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <p class="font-semibold text-green-700">Gestió del Servei:</p>
+                            <p class="font-mono text-sm bg-green-100 p-1 rounded">systemctl restart apache2</p>
+                            <p class="font-mono text-sm bg-green-100 p-1 rounded mt-1">systemctl status apache2</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-green-700">Activació de Llocs:</p>
+                            <p class="font-mono text-sm bg-green-100 p-1 rounded">a2ensite nom_fitxer.conf</p>
+                            <p class="font-mono text-sm bg-green-100 p-1 rounded mt-1">a2dissite nom_fitxer.conf</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-green-700">Verificació:</p>
+                            <p class="font-mono text-sm bg-green-100 p-1 rounded">apache2ctl configtest</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Signature -->
+        <footer class="bg-gray-100 p-4 text-center text-sm text-gray-600 border-t">
+            <p>Infografia Tècnica | Mòdul Serveis en Xarxa</p>
+            <p class="font-semibold mt-1">Raül Saiz Laudó</p>
+        </footer>
+    </div>
+
+</body>
+</html>
