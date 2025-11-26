@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia: Proxy amb Windows Server</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0; /* Blue Gray 200 */
+        }
+        .windows-blue { background-color: #0078d4; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden border-t-8 border-cyan-500">
+        <!-- Header -->
+        <header class="windows-blue text-white p-6 md:p-8">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-center">PROXY DE XARXA AMB WINDOWS SERVER</h1>
+            <p class="text-center text-gray-200 mt-2 text-lg">Mòdul 0227 - SMX | Rols IIS i Application Request Routing (ARR)</p>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="p-6 md:p-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Columna 1: Rols i Funció -->
+            <div class="lg:col-span-1 space-y-8">
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-blue-800 mb-4 flex items-center">
+                        <span class="text-4xl mr-3 text-cyan-500">⚙️</span> Rols Necessaris
+                    </h2>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="font-semibold">1. Rol Servidor Web (IIS):</li>
+                        <p class="text-sm ml-4">Proporciona l'estructura bàsica del servidor web i la consola d'administració.</p>
+                        <li class="font-semibold">2. Application Request Routing (ARR):</li>
+                        <p class="text-sm ml-4">Extensió d'IIS que habilita les funcionalitats de Proxy i balanceig de càrrega.</p>
+                    </ul>
+                </div>
+
+                <!-- Eina d'Administració -->
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="text-3xl mr-3 text-gray-500">🖥️</span> Eina d'Administració
+                    </h3>
+                    <p class="text-gray-600 font-semibold">IIS Manager (Internet Information Services Manager)</p>
+                    <p class="text-sm mt-2">Tota la configuració d'ARR i Rewrite Rules es gestiona gràficament des d'aquesta consola.</p>
+                    
+                </div>
+            </div>
+
+            <!-- Columna 2: Fases de Configuració (Gràfica) -->
+            <div class="lg:col-span-2 bg-gray-50 p-6 rounded-xl shadow-2xl border-2 border-gray-300">
+                <h2 class="text-3xl font-bold text-gray-700 mb-6 flex items-center">
+                    <span class="text-4xl mr-3 text-green-500">✔️</span> Fases Clau de la Configuració
+                </h2>
+
+                <div class="space-y-4">
+                    <!-- Pas 1 -->
+                    <div class="flex items-start bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
+                        <span class="text-xl font-bold p-2 bg-green-500 text-white rounded-full mr-4">1</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">Instal·lació:</p>
+                            <p class="text-sm text-gray-600">Instal·lar el rol **IIS** i l'extensió **ARR** (manquen eines de Microsoft).</p>
+                        </div>
+                    </div>
+                    <!-- Pas 2 -->
+                    <div class="flex items-start bg-white p-4 rounded-lg shadow border-l-4 border-yellow-500">
+                        <span class="text-xl font-bold p-2 bg-yellow-500 text-white rounded-full mr-4">2</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">ARR Proxy Settings:</p>
+                            <p class="text-sm text-gray-600">Al **IIS Manager** > **Nom de Servidor** > **Application Request Routing Cache**, cal marcar l'opció **Enable Proxy**.</p>
+                        </div>
+                    </div>
+                    <!-- Pas 3 -->
+                    <div class="flex items-start bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
+                        <span class="text-xl font-bold p-2 bg-red-500 text-white rounded-full mr-4">3</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">URL Rewrite (Regles):</p>
+                            <p class="text-sm text-gray-600">Configurar les regles de reescriptura per gestionar les peticions sortints i aplicar filtres de bloqueig bàsics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 3: Client i Ports -->
+            <div class="lg:col-span-3">
+                <div class="bg-cyan-50 border-l-4 border-cyan-600 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-cyan-800 mb-4 flex items-center">
+                        <span class="text-4xl mr-3">🖥️</span> Configuració al Client Linux (Gnome)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li>Accedeix a **Configuració** > **Xarxa** > **Proxy de xarxa**.</li>
+                            <li>Tria el mètode **Manual**.</li>
+                            <li>**IP del Servidor:** <span class="font-mono bg-cyan-100 p-1 rounded">192.168.1.10</span> (Windows Server)</li>
+                            <li>**Port del Proxy:** <span class="font-mono bg-cyan-100 p-1 rounded">8080</span> (o el port configurat a l'IIS)</li>
+                        </ul>
+                        <div class="bg-white p-3 rounded-lg border border-gray-200">
+                            <h3 class="font-semibold mb-2">Ports de Funcionament:</h3>
+                            <p class="text-sm">El Proxy de l'IIS/ARR pot utilitzar els ports web estàndard, però per separar serveis, es recomana:</p>
+                            <p class="font-mono text-sm bg-gray-100 p-1 rounded mt-1">HTTP: 8080 | HTTPS: 8443</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Signature -->
+        <footer class="bg-gray-100 p-4 text-center text-sm text-gray-600 border-t">
+            <p>Infografia Tècnica | Mòdul Serveis en Xarxa</p>
+            <p class="font-semibold mt-1">Raül Saiz Laudó</p>
+        </footer>
+    </div>
+
+</body>
+</html>
