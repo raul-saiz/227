@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA8 - Router Linux: NAT i Firewall</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            border-left: 5px solid #06B6D4; /* Tailwind cyan-500 */
+        }
+        .step-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            border-left-color: #10B981; /* Tailwind emerald-500 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header Section -->
+    <header class="text-center mb-10 bg-white p-6 rounded-xl shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+            🌐 RA8: Router Linux amb NAT i Firewall
+        </h1>
+        <p class="text-xl text-indigo-600 font-semibold">
+            Mòdul 0227: Serveis de Xarxa (SMX)
+        </p>
+    </header>
+
+    <!-- Environment Setup -->
+    <section class="mb-10 p-6 bg-white rounded-xl shadow-lg">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Esquema de la Xarxa</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div class="p-3 bg-gray-50 rounded-lg border">
+                <p class="font-bold text-lg text-red-500">CLIENT (LAN)</p>
+                <p class="text-sm">Linux GNOME - IP: 192.168.10.2</p>
+            </div>
+            <div class="p-3 bg-gray-100 rounded-lg border-2 border-indigo-500">
+                <p class="font-bold text-lg text-indigo-700">ROUTER DEBIAN (Firewall/NAT)</p>
+                <p class="text-sm">eth0: 192.168.10.1 (LAN) | eth1: IP Externa (WAN)</p>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-lg border">
+                <p class="font-bold text-lg text-blue-500">INTERNET (WAN)</p>
+                <p class="text-sm">Xarxa Pública</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NAT/Masquerading Section -->
+    <section class="mb-10">
+        <h2 class="text-3xl font-bold text-cyan-600 mb-6 border-b-2 border-cyan-300 pb-2">
+            Pas 1: NAT (Sortida a Xarxa Pública)
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="step-card p-5 bg-white rounded-lg">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-700">1. Habilitar Encaminament (Forwarding)</h3>
+                <p class="text-gray-600 mb-3">Permetre que els paquets passin entre les interfícies eth0 i eth1.</p>
+                <pre class="bg-gray-800 text-white p-3 rounded-md overflow-x-auto text-sm"><code>sudo nano /etc/sysctl.conf
+# net.ipv4.ip_forward=1
+sudo sysctl -p</code></pre>
+            </div>
+
+            <div class="step-card p-5 bg-white rounded-lg">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-700">2. Configurar Masquerading (NAT)</h3>
+                <p class="text-gray-600 mb-3">Canviar l'IP d'origen de la LAN per l'IP de la WAN quan surt per `eth1`.</p>
+                <pre class="bg-gray-800 text-white p-3 rounded-md overflow-x-auto text-sm"><code># Taula NAT, Cadena POSTROUTING
+sudo iptables -t nat -A POSTROUTING -o eth1 -s 192.168.10.0/24 -j MASQUERADE</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Firewall Section -->
+    <section class="mb-10">
+        <h2 class="text-3xl font-bold text-emerald-600 mb-6 border-b-2 border-emerald-300 pb-2">
+            Pas 2: Firewall amb iptables (Filtratge)
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="step-card p-5 bg-white rounded-lg border-emerald-500">
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">3. Política de Seguretat (DROP)</h3>
+                <p class="text-gray-600 mb-3">Establir la política per defecte a **DROP** a la cadena `FORWARD` per denegar tot per defecte.</p>
+                <pre class="bg-gray-800 text-white p-3 rounded-md overflow-x-auto text-sm"><code>sudo iptables -P FORWARD DROP
+sudo iptables -F FORWARD</code></pre>
+            </div>
+            
+            <div class="step-card p-5 bg-white rounded-lg border-emerald-500">
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">4. Regles de Filtratge (Bloqueig/Permís)</h3>
+                <p class="text-gray-600 mb-3">Bloqueig específic de la navegació (Web).</p>
+                <pre class="bg-gray-800 text-white p-3 rounded-md overflow-x-auto text-sm"><code># Bloqueja HTTP/S
+sudo iptables -A FORWARD -i eth0 -o eth1 -p tcp --dport 80 -j DROP
+sudo iptables -A FORWARD -i eth0 -o eth1 -p tcp --dport 443 -j DROP</code></pre>
+            </div>
+
+            <div class="step-card p-5 bg-white rounded-lg border-emerald-500">
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">5. Permetre Trànsit Establert</h3>
+                <p class="text-gray-600 mb-3">Permetre el pas del trànsit que ja forma part d'una connexió iniciada (essencial).</p>
+                <pre class="bg-gray-800 text-white p-3 rounded-md overflow-x-auto text-sm"><code># Permet respostes de connexions ja obertes
+sudo iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+# Permetre la resta de trànsit de sortida
+sudo iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Persistency and Signature -->
+    <section class="text-center p-6 bg-gray-800 text-white rounded-xl shadow-xl">
+        <h3 class="text-xl font-semibold mb-3">Persistència de les Regles</h3>
+        <p class="mb-4">Guarda totes les regles (NAT i Firewall) per mantenir-les després d'un reinici del sistema.</p>
+        <pre class="bg-gray-900 text-yellow-300 p-3 rounded-md inline-block"><code>sudo netfilter-persistent save</code></pre>
+        <div class="mt-6 border-t border-gray-700 pt-4">
+            <p class="text-lg font-bold text-teal-400">Raül Saiz Laudó</p>
+        </div>
+    </section>
+
+</body>
+</html>
