@@ -3,106 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografia: Servidor Web Apache2</title>
+    <title>Infografia Web: Apache2 a Debian</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Blue Gray 100 */
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .step-card { transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 5px solid #DC2626; } /* Tailwind Red-600 */
+        .step-card:hover { transform: translateY(-2px); border-left-color: #16A34A; } /* Tailwind Green-600 */
+        .header-apache { background-color: #A34A3E; } /* Reddish color for Apache */
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden border-t-8 border-orange-500">
-        <!-- Header -->
-        <header class="bg-orange-600 text-white p-6 md:p-8">
-            <h1 class="text-3xl md:text-5xl font-extrabold text-center">SERVEI WEB AMB APACHE2 (LINUX)</h1>
-            <p class="text-center text-orange-200 mt-2 text-lg">Mòdul 0227 - SMX | Allotjament i Virtual Hosts</p>
-        </header>
+    <!-- Header Section -->
+    <header class="text-center mb-10 p-6 rounded-xl shadow-lg header-apache text-white">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2">
+            🚀 Servidor Web Segur: Apache2 a Debian
+        </h1>
+        <p class="text-xl font-semibold opacity-90">
+            Guia ràpida: HTTP (80) i HTTPS (443) amb Virtual Hosts
+        </p>
+    </header>
+    [Image of Apache logo]
 
-        <!-- Main Content Grid -->
-        <div class="p-6 md:p-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            <!-- Columna 1: Arquitectura i Fitxers -->
-            <div class="lg:col-span-1 space-y-8">
-                <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-orange-800 mb-4 flex items-center">
-                        <span class="text-4xl mr-3">📁</span> Fitxers de Configuració Clau
-                    </h2>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><span class="font-mono bg-yellow-100 p-1 rounded">/etc/apache2/ports.conf</span>: Defineix els ports d'escolta (80, 443).</li>
-                        <li><span class="font-mono bg-yellow-100 p-1 rounded">/etc/apache2/sites-available/</span>: Conté els fitxers de configuració dels Virtual Hosts.</li>
-                        <li><span class="font-mono bg-yellow-100 p-1 rounded">/var/www/html</span>: Directori arrel del lloc per defecte.</li>
-                    </ul>
-                </div>
-
-                <!-- Ports Estàndard -->
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
-                        <span class="text-3xl mr-3 text-red-500">🔌</span> Ports Essencials
-                    </h3>
-                    <ul class="space-y-2 text-gray-600">
-                        <li>**HTTP (Sense Xifrar):** <span class="font-mono bg-red-100 p-1 rounded">80</span></li>
-                        <li>**HTTPS (Xifrat TLS/SSL):** <span class="font-mono bg-red-100 p-1 rounded">443</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Columna 2: Virtual Hosts (VHost) -->
-            <div class="lg:col-span-2 bg-gray-50 p-6 rounded-xl shadow-2xl border-2 border-gray-300">
-                <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center">
-                    <span class="text-4xl mr-3">🌐</span> Virtual Host (VHost)
-                </h2>
-
-                <p class="text-lg mb-4 text-gray-700">Permet allotjar múltiples llocs web (dominis) en un sol servidor amb una única adreça IP.</p>
-
-                <div class="bg-blue-50 p-5 rounded-lg border-2 border-blue-300">
-                    <h3 class="font-semibold text-blue-800 mb-3 flex items-center"><span class="mr-2">📝</span> Estructura Mínima d'un VHost</h3>
-                    <pre class="bg-gray-800 text-green-300 p-3 rounded text-sm overflow-x-auto"><code>
-&lt;VirtualHost *:80&gt;
-    ServerName fp227.local 
-    ServerAlias www.fp227.local 
-    DocumentRoot /var/www/fp227.local/html  &lt;-- Ubicació dels fitxers
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-&lt;/VirtualHost&gt;
-                    </code></pre>
-                </div>
-            </div>
-
-            <!-- Columna 3: Comandes i Gestió -->
-            <div class="lg:col-span-3">
-                <div class="bg-green-50 border-l-4 border-green-600 p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-green-800 mb-4 flex items-center">
-                        <span class="text-4xl mr-3">🚀</span> Comandes de Gestió
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <p class="font-semibold text-green-700">Gestió del Servei:</p>
-                            <p class="font-mono text-sm bg-green-100 p-1 rounded">systemctl restart apache2</p>
-                            <p class="font-mono text-sm bg-green-100 p-1 rounded mt-1">systemctl status apache2</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-green-700">Activació de Llocs:</p>
-                            <p class="font-mono text-sm bg-green-100 p-1 rounded">a2ensite nom_fitxer.conf</p>
-                            <p class="font-mono text-sm bg-green-100 p-1 rounded mt-1">a2dissite nom_fitxer.conf</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-green-700">Verificació:</p>
-                            <p class="font-mono text-sm bg-green-100 p-1 rounded">apache2ctl configtest</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Steps Container -->
+    <div class="space-y-8 max-w-4xl mx-auto">
+        
+        <!-- Step 1: Installation -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">1. Instal·lació Bàsica</h3>
+            <p class="text-gray-600 mb-3">Instal·lar el paquet Apache2 i verificar l'estat del servei.</p>
+            <pre class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto"><code>sudo apt install apache2
+sudo systemctl status apache2</code></pre>
         </div>
 
-        <!-- Footer / Signature -->
-        <footer class="bg-gray-100 p-4 text-center text-sm text-gray-600 border-t">
-            <p>Infografia Tècnica | Mòdul Serveis en Xarxa</p>
-            <p class="font-semibold mt-1">Raül Saiz Laudó</p>
-        </footer>
+        <!-- Step 2: Virtual Host HTTP -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">2. Configurar HTTP (Port 80)</h3>
+            <p class="text-gray-600 mb-3">Crear el directori (`/var/www/elmeuweb.local`) i el Virtual Host.</p>
+            <pre class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto"><code>sudo nano /etc/apache2/sites-available/elmeuweb.conf
+# <VirtualHost *:80> ... </VirtualHost>
+sudo a2ensite elmeuweb.conf</code></pre>
+        </div>
+        
+
+        <!-- Step 3: HTTPS Setup -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">3. Preparar HTTPS (Port 443)</h3>
+            <p class="text-gray-600 mb-3">Habilitar el mòdul SSL i generar un certificat autofirmat amb OpenSSL.</p>
+            <pre class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto"><code>sudo a2enmod ssl
+sudo openssl req -x509 ... -keyout ... -out ...</code></pre>
+        </div>
+
+        <!-- Step 4: Finalize SSL -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">4. Finalitzar Configuració SSL</h3>
+            <p class="text-gray-600 mb-3">Configurar el Virtual Host per al port 443 i apuntar als fitxers del certificat.</p>
+            <pre class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto"><code>sudo nano elmeuweb-ssl.conf
+# SSLEngine on
+# SSLCertificateFile /etc/ssl/certs/...
+sudo a2ensite elmeuweb-ssl.conf</code></pre>
+        </div>
+
+        <!-- Step 5: Restart -->
+        <div class="step-card p-6 bg-white rounded-lg bg-red-50">
+            <h3 class="text-2xl font-bold text-red-700 mb-2">5. Aplicar i Provar</h3>
+            <p class="text-gray-600 mb-3">Reinicia el servei i verifica l'accés HTTPS des del client.</p>
+            <pre class="bg-red-100 p-3 rounded-md text-sm overflow-x-auto"><code>sudo systemctl restart apache2
+# Client: https://elmeuweb.local</code></pre>
+        </div>
+
     </div>
+
+    <!-- Signature -->
+    <footer class="mt-10 text-center text-gray-500 pt-4 border-t">
+        <p class="text-lg font-bold text-gray-800">Raül Saiz Laudó</p>
+    </footer>
 
 </body>
 </html>
