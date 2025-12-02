@@ -3,110 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografia: Servidor Web IIS</title>
+    <title>Infografia Web: IIS a Windows Server</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #ebf8ff; /* Blue 50 */
-        }
-        .iis-blue { background-color: #0078d4; }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .step-card { transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 5px solid #0078D4; } /* Microsoft Blue */
+        .step-card:hover { transform: translateY(-2px); border-left-color: #FBBF24; } /* Tailwind Amber */
+        .header-iis { background-color: #0078D4; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden border-t-8 border-cyan-500">
-        <!-- Header -->
-        <header class="iis-blue text-white p-6 md:p-8">
-            <h1 class="text-3xl md:text-5xl font-extrabold text-center">SERVEI WEB AMB IIS (WINDOWS SERVER)</h1>
-            <p class="text-center text-gray-200 mt-2 text-lg">Mòdul 0227 - SMX | Internet Information Services</p>
-        </header>
+    <!-- Header Section -->
+    <header class="text-center mb-10 p-6 rounded-xl shadow-lg header-iis text-white">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2">
+            💻 Servidor Web Segur: IIS a Windows Server
+        </h1>
+        <p class="text-xl font-semibold opacity-90">
+            Guia ràpida d'instal·lació i configuració de llocs Web (Sites)
+        </p>
+    </header>
+    
 
-        <!-- Main Content Grid -->
-        <div class="p-6 md:p-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            <!-- Columna 1: Instal·lació i Rols -->
-            <div class="lg:col-span-1 space-y-8">
-                <div class="bg-cyan-50 border-l-4 border-cyan-500 p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-cyan-800 mb-4 flex items-center">
-                        <span class="text-4xl mr-3">⚙️</span> Rols i Instal·lació
-                    </h2>
-                    <ul class="space-y-3 text-gray-700">
-                        <li>**Eina:** <span class="font-semibold text-cyan-600">Server Manager</span></li>
-                        <li>**Rol a Afegir:** <span class="font-semibold text-cyan-600">Web Server (IIS)</span></li>
-                        <li>**Inici:** El servei s'inicia automàticament després de la instal·lació.</li>
-                    </ul>
-                </div>
-
-                <!-- Ports Estàndard -->
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
-                        <span class="text-3xl mr-3 text-red-500">🔌</span> Ports Essencials
-                    </h3>
-                    <ul class="space-y-2 text-gray-600">
-                        <li>**HTTP (Per Defecte):** <span class="font-mono bg-red-100 p-1 rounded">80</span></li>
-                        <li>**HTTPS (TLS/SSL):** <span class="font-mono bg-red-100 p-1 rounded">443</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Columna 2: Gestió i Carpetes -->
-            <div class="lg:col-span-2 bg-gray-50 p-6 rounded-xl shadow-2xl border-2 border-gray-300">
-                <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center">
-                    <span class="text-4xl mr-3">🖥️</span> Administració i Ubicacions
-                </h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Eina de Gestió -->
-                    <div class="bg-white p-4 rounded-lg shadow border-b-4 border-blue-500">
-                        <p class="font-bold text-xl text-blue-700">Eina de Gestió</p>
-                        <p class="text-sm">Tota la configuració es realitza des de la consola **Internet Information Services (IIS) Manager**.</p>
-                    </div>
-                    <!-- Carpeta Arrel -->
-                    <div class="bg-white p-4 rounded-lg shadow border-b-4 border-green-500">
-                        <p class="font-bold text-xl text-green-700">Contingut del Lloc Web</p>
-                        <p class="font-mono text-sm bg-green-100 p-1 rounded mt-2">C:\inetpub\wwwroot\</p>
-                        <p class="text-xs mt-1">És el directori arrel del "Default Web Site".</p>
-                    </div>
-                </div>
-
-                <h3 class="font-semibold text-lg text-red-700 mt-6 mb-3 flex items-center"><span class="mr-2">🚨</span> Seguretat (Firewall)</h3>
-                <p class="text-sm bg-red-50 p-3 rounded-lg border border-red-300">Cal verificar i habilitar les regles d'entrada per als ports **80 (HTTP)** i **443 (HTTPS)** al **Windows Defender Firewall with Advanced Security**.</p>
-            </div>
-
-            <!-- Columna 3: Gestió d'Enllaços (Bindings) -->
-            <div class="lg:col-span-3">
-                <div class="bg-yellow-50 border-l-4 border-yellow-600 p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-yellow-800 mb-4 flex items-center">
-                        <span class="text-4xl mr-3">🔗</span> Modificació d'Enllaços (Bindings)
-                    </h2>
-                    <p class="text-gray-700 mb-3">Per canviar el port o l'adreça IP d'escolta d'un lloc web (Default Web Site), utilitzem l'opció **Bindings...** (Enllaços) dins de l'IIS Manager.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-yellow-100 p-3 rounded-lg">
-                            <p class="font-semibold text-sm">Passos per canviar el port 80 a 8080:</p>
-                            <ol class="list-decimal list-inside text-xs ml-4 mt-2">
-                                <li>IIS Manager > Sites > Default Web Site.</li>
-                                <li>Clic a "Bindings..." (Actions Panel).</li>
-                                <li>Edita l'enllaç HTTP i canvia el port.</li>
-                            </ol>
-                        </div>
-                        <div class="bg-yellow-100 p-3 rounded-lg">
-                            <p class="font-semibold text-sm">Accés al Client Després del Canvi:</p>
-                            <p class="font-mono text-sm bg-white p-1 rounded mt-2">http://[IP_Servidor]:8080</p>
-                            <p class="text-xs mt-1">Si es manté el port 80, no cal especificar-lo a l'URL.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Steps Container -->
+    <div class="space-y-8 max-w-4xl mx-auto">
+        
+        <!-- Step 1: Installation -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">1. Instal·lació del Rol IIS</h3>
+            <p class="text-gray-600 mb-3">Afegir el rol de Servidor Web (IIS) mitjançant el Gestor del Servidor.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">Server Manager → Add Roles and Features → Web Server (IIS)</p>
         </div>
 
-        <!-- Footer / Signature -->
-        <footer class="bg-gray-100 p-4 text-center text-sm text-gray-600 border-t">
-            <p>Infografia Tècnica | Mòdul Serveis en Xarxa</p>
-            <p class="font-semibold mt-1">Raül Saiz Laudó</p>
-        </footer>
+        <!-- Step 2: New Website -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">2. Crear Nou Lloc Web (HTTP)</h3>
+            <p class="text-gray-600 mb-3">Definir la ruta física i els enllaços HTTP (Port 80) al Gestor d'IIS.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">IIS Manager → Sites → Add Website...</p>
+        </div>
+
+        <!-- Step 3: Certificate -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">3. Certificat SSL</h3>
+            <p class="text-gray-600 mb-3">Generar o importar un certificat. Per defecte, fem un certificat autofirmat.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">Server Certificates → Create Self-Signed Certificate...</p>
+        </div>
+
+        <!-- Step 4: HTTPS Binding -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">4. Habilitar HTTPS (Port 443)</h3>
+            <p class="text-gray-600 mb-3">Afegir un nou Enllaç (Binding) de tipus HTTPS al lloc web, seleccionant el certificat creat.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">Lloc Web → Bindings... → Add... → Type: https, Port: 443</p>
+        </div>
+
+        <!-- Step 5: Test -->
+        <div class="step-card p-6 bg-white rounded-lg bg-blue-50">
+            <h3 class="text-2xl font-bold text-blue-700 mb-2">5. Verificació i Prova</h3>
+            <p class="text-gray-600 mb-3">Provar l'accés segur des del client. Recorda afegir el nom al fitxer `/etc/hosts`.</p>
+            <p class="font-mono bg-blue-100 p-2 rounded-md text-sm">Client: https://elmeuweb.local</p>
+        </div>
+
     </div>
+
+    <!-- Signature -->
+    <footer class="mt-10 text-center text-gray-500 pt-4 border-t">
+        <p class="text-lg font-bold text-gray-800">Raül Saiz Laudó</p>
+    </footer>
 
 </body>
 </html>
