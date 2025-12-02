@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografia Web: DHCP a Windows Server</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .step-card { transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 5px solid #0078D4; } /* Microsoft Blue */
+        .step-card:hover { transform: translateY(-2px); border-left-color: #10B981; } /* Tailwind Emerald */
+        .header-iis { background-color: #0078D4; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header Section -->
+    <header class="text-center mb-10 p-6 rounded-xl shadow-lg header-iis text-white">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2">
+            🔢 Configuració del Servidor DHCP a Windows Server
+        </h1>
+        <p class="text-xl font-semibold opacity-90">
+            Guia ràpida: Instal·lació del Rol i Creació de l'Àmbit (Scope)
+        </p>
+    </header>
+    
+
+    <!-- Steps Container -->
+    <div class="space-y-8 max-w-4xl mx-auto">
+        
+        <!-- Step 1: Installation -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">1. Instal·lació del Rol</h3>
+            <p class="text-gray-600 mb-3">Afegeix el rol de Servidor DHCP mitjançant el Gestor del Servidor.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">Server Manager → Add Roles and Features → DHCP Server</p>
+        </div>
+
+        <!-- Step 2: Post-Configuration -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">2. Autorització</h3>
+            <p class="text-gray-600 mb-3">Completa la configuració post-instal·lació per autoritzar el servidor a la xarxa.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">Bandera Groga (Notificacions) → Complete DHCP configuration</p>
+        </div>
+
+        <!-- Step 3: Scope Creation -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">3. Creació de l'Àmbit (Scope)</h3>
+            <p class="text-gray-600 mb-3">Inicia l'assistent per definir el rang d'IPs de la teva xarxa local.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">DHCP Manager → IPv4 → New Scope...</p>
+        </div>
+
+        <!-- Step 4: Scope Options -->
+        <div class="step-card p-6 bg-white rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">4. Opcions Essencials</h3>
+            <p class="text-gray-600 mb-3">Configurar l'Encaminador (Router/Gateway), DNS i Nom de Domini durant l'assistent.</p>
+            <p class="font-mono bg-gray-100 p-2 rounded-md text-sm">Opcions: Router (192.168.X.1), DNS (192.168.X.10), Nom de Domini</p>
+        </div>
+
+        <!-- Step 5: Reservation -->
+        <div class="step-card p-6 bg-white rounded-lg bg-blue-50">
+            <h3 class="text-2xl font-bold text-blue-700 mb-2">5. Reserva i Prova</h3>
+            <p class="text-gray-600 mb-3">Utilitzar Reserves per assignar una IP fixa per a un client amb MAC específica. Prova al client amb `ipconfig /renew`.</p>
+            <p class="font-mono bg-blue-100 p-2 rounded-md text-sm">Scope → Reservations → New Reservation...</p>
+        </div>
+
+    </div>
+
+    <!-- Signature -->
+    <footer class="mt-10 text-center text-gray-500 pt-4 border-t">
+        <p class="text-lg font-bold text-gray-800">Raül Saiz Laudó</p>
+    </footer>
+
+</body>
+</html>
